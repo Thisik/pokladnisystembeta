@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pokladní systém</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        #main-container {
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        #items-list {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="main-container">
+        <h1>Vítejte v pokladním systému</h1>
+        <p>Chcete být přijímatel, nebo odesílatel?</p>
+        <button id="receiver">Přijímatel</button>
+        <button id="sender">Odesílatel</button>
+        <div id="items-list">
+            <h2>Výběr položek:</h2>
+            <ul>
+                <li><button class="item">Nut Light</button></li>
+                <li><button class="item">Rulička Light</button></li>
+                <li><button class="item">Bottle Light</button></li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        const receiverButton = document.getElementById("receiver");
+        const senderButton = document.getElementById("sender");
+        const itemsList = document.getElementById("items-list");
+        const itemButtons = document.querySelectorAll(".item");
+
+        let shoppingList = [];
+        let totalAmount = 0;
+
+        senderButton.addEventListener("click", () => {
+            itemsList.style.display = "block";
+        });
+
+        itemButtons.forEach((button) => {
+            button.addEventListener("click", () => {
+                const itemName = button.textContent;
+                const itemPrice = parseFloat(prompt(`Zadejte cenu položky "${itemName}":`));
+                if (!isNaN(itemPrice)) {
+                    const quantity = shoppingList.filter(item => item.name === itemName).length + 1;
+                    shoppingList.push({ name: itemName, price: itemPrice });
+                    alert(`Přidáno "${itemName}" s cenou ${itemPrice} Kč. Celkem ${quantity} ks.`);
+                }
+            });
+        });
+
+        receiverButton.addEventListener("click", () => {
+            const spaceBarKey = 32;
+            document.addEventListener("keydown", (event) => {
+                if (event.keyCode === spaceBarKey) {
+                    const receipt = shoppingList.map(item => `${item.name} ${item.price} Kč`).join(", ");
+                    alert(`CELKOVÁ ČÁSTKA: ${totalAmount.toFixed(2)} Kč\n\nDěkujeme za Váš nákup.\n\nPoložky: ${receipt}`);
+                    shoppingList = [];
+                    totalAmount = 0;
+                }
+            });
+        });
+    </script>
+</body>
+</html>
